@@ -259,14 +259,74 @@ function updateStats(){
  document.getElementById("moves").innerText=moves;
 }
 
+
 function winGame(){
 
  clearInterval(timer);
  started=false;
 
- document.getElementById("message").innerText=
- "🎉 AMAZING! FOTO RANA BERHASIL DISUSUN! 💗";
+ document.getElementById("message").innerHTML=`
+
+ <div style="
+ padding:20px 8px;
+ animation:celebrate 1s ease;
+ ">
+
+ <div style="font-size:55px">
+ 💖🌹💖
+ </div>
+
+ <h2 style="
+ color:#ff8fbd;
+ font-size:25px;
+ ">
+ CONGRATULATIONS, RANA!
+ </h2>
+
+ <p style="
+ color:white;
+ font-size:16px;
+ line-height:1.8;
+ ">
+ Yeayyy! Kamu berhasil menyelesaikan
+ seluruh puzzle ini! 🥰
+ </p>
+
+ <p style="
+ color:#ffb6d2;
+ font-size:17px;
+ line-height:1.8;
+ ">
+ Setiap potongan akhirnya menemukan
+ tempatnya, seperti setiap momen kecil
+ yang membuat sebuah kenangan menjadi
+ istimewa.
+ </p>
+
+ <h3 style="color:#ff8fbd">
+ You're Amazing, Rana! ❤️
+ </h3>
+
+ <p style="color:white">
+ Terima kasih sudah bermain.
+ Semoga hari-harimu selalu dipenuhi
+ kebahagiaan dan senyuman.
+ </p>
+
+ <div style="font-size:35px">
+ 💕 💗 💕
+ </div>
+
+ <p style="color:#ffb6d2">
+ With love, <br>
+ <b>DERiiLNAY</b>
+ </p>
+
+ </div>
+ `;
+
 }
+
 
 function showPreview(){
 
