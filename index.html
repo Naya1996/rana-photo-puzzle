@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RANA PHOTO PUZZLE</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ padding:20px 12px;
+ min-height:100vh;
+ background:linear-gradient(145deg,#080e20,#182440);
+ color:white;
+ font-family:Arial,sans-serif;
+ text-align:center;
+}
+
+h1{
+ color:#ff8fbd;
+ letter-spacing:2px;
+ font-size:25px;
+}
+
+.subtitle{color:#c4cce0}
+
+.panel{
+ max-width:440px;
+ margin:auto;
+ padding:16px;
+ background:#111d35;
+ border:1px solid #354563;
+ border-radius:20px;
+}
+
+.stats{
+ display:flex;
+ justify-content:space-around;
+ margin:15px 0;
+}
+
+.stats div{
+ background:#202f4c;
+ padding:10px;
+ border-radius:12px;
+ flex:1;
+ margin:4px;
+}
+
+.stats b{
+ display:block;
+ color:#ff9bc4;
+ font-size:20px;
+ margin-top:5px;
+}
+
+#puzzle{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:4px;
+ width:100%;
+ aspect-ratio:1;
+ background:#34415a;
+ padding:5px;
+ border-radius:12px;
+}
+
+.tile{
+ border:2px solid #73809a;
+ border-radius:5px;
+ background-image:url("rana.jpg");
+ background-size:400% 400%;
+ cursor:pointer;
+ position:relative;
+ min-width:0;
+}
+
+.tile.selected{
+ border:3px solid #ff69aa;
+ filter:brightness(1.3);
+ transform:scale(.95);
+}
+
+button{
+ border:0;
+ border-radius:12px;
+ padding:12px 16px;
+ margin:5px 3px;
+ background:#ff79ad;
+ color:#161629;
+ font-weight:bold;
+ font-size:14px;
+}
+
+button:active{transform:scale(.96)}
+
+#message{
+ color:#ffb4d1;
+ font-weight:bold;
+ min-height:25px;
+ margin-top:15px;
+}
+
+#preview{
+ display:none;
+ width:100%;
+ border-radius:12px;
+ margin-top:12px;
+}
+
+.footer{
+ margin-top:20px;
+ color:#8998b4;
+ font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💗 RANA PHOTO PUZZLE</h1>
+<p class="subtitle">Can you complete the picture?</p>
+
+<div class="panel">
+
+ <div class="stats">
+  <div>TIME<b id="time">00:00</b></div>
+  <div>MOVES<b id="moves">0</b></div>
+ </div>
+
+ <div id="puzzle"></div>
+
+ <div id="message">Pilih dua potongan untuk menukarnya!</div>
+
+ <button onclick="startGame()">🔀 SHUFFLE</button>
+ <button onclick="showPreview()">👁 PREVIEW</button>
+ <button onclick="resetGame()">↻ RESET</button>
+
+ <img id="preview" src="rana.jpg">
+
+ <p style="font-size:12px;color:#aab6ce">
+  Sentuh dua potongan untuk menukar posisi.
+ </p>
+
+</div>
+
+<div class="footer">
+ DEVELOPED BY DERiiLNAY ❤️
+</div>
+
+<script>
+const SIZE=4;
+let order=[];
+let selected=null;
+let moves=0;
+let seconds=0;
+let timer=null;
+let started=false;
+
+const puzzle=document.getElementById("puzzle");
+
+function startGame(){
+
+ clearInterval(timer);
+
+ order=Array.from(
+  {length:SIZE*SIZE},
+  (_,i)=>i
+ );
+
+ for(let i=order.length-1;i>0;i--){
+  let j=Math.floor(Math.random()*(i+1));
+  [order[i],order[j]]=[order[j],order[i]];
+ }
+
+ moves=0;
+ seconds=0;
+ selected=null;
+ started=true;
+
+ updateStats();
+ render();
+
+ document.getElementById("message").innerText=
+ "Susun foto Rana sampai lengkap!";
+
+ timer=setInterval(()=>{
+  seconds++;
+  updateStats();
+ },1000);
+}
+
+function render(){
+
+ puzzle.innerHTML="";
+
+ order.forEach((value,index)=>{
+
+  const tile=document.createElement("div");
+  tile.className="tile";
+
+  let row=Math.floor(value/SIZE);
+  let col=value%SIZE;
+
+  tile.style.backgroundPosition=
+   `${col*100/3}% ${row*100/3}%`;
+
+  if(selected===index){
+   tile.classList.add("selected");
+  }
+
+  tile.onclick=()=>chooseTile(index);
+
+  puzzle.appendChild(tile);
+ });
+}
+
+function chooseTile(index){
+
+ if(!started)return;
+
+ if(selected===null){
+  selected=index;
+  render();
+  return;
+ }
+
+ if(selected===index){
+  selected=null;
+  render();
+  return;
+ }
+
+ [order[selected],order[index]]=
+ [order[index],order[selected]];
+
+ selected=null;
+ moves++;
+
+ updateStats();
+ render();
+
+ if(order.every((v,i)=>v===i)){
+  winGame();
+ }
+}
+
+function updateStats(){
+
+ let min=String(Math.floor(seconds/60)).padStart(2,"0");
+ let sec=String(seconds%60).padStart(2,"0");
+
+ document.getElementById("time").innerText=
+ min+":"+sec;
+
+ document.getElementById("moves").innerText=moves;
+}
+
+function winGame(){
+
+ clearInterval(timer);
+ started=false;
+
+ document.getElementById("message").innerText=
+ "🎉 AMAZING! FOTO RANA BERHASIL DISUSUN! 💗";
+}
+
+function showPreview(){
+
+ const p=document.getElementById("preview");
+
+ p.style.display=
+ p.style.display==="block"?"none":"block";
+}
+
+function resetGame(){
+ startGame();
+}
+
+startGame();
+</script>
+
+</body>
+</html>
